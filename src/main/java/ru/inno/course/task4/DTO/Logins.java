@@ -24,6 +24,7 @@ public class Logins {
     private Timestamp accessDate;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @Column(name = "application")

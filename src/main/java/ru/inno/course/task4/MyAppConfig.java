@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan("ru.inno.course.task4")
 @PropertySource("classpath:application.properties")
 @EnableJpaRepositories
-public class AppConfig {
+public class MyAppConfig {
     public static final String pathLogFiles = "D:\\WORK\\";
-    public static final String connectParam = "jdbc:postgresql://localhost:5432/postgres Usercourse 1111";
+
 
 }
 

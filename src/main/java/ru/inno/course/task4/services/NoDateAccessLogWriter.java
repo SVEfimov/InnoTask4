@@ -1,7 +1,7 @@
 package ru.inno.course.task4.services;
 
 import org.springframework.stereotype.Service;
-import ru.inno.course.task4.AppConfig;
+import ru.inno.course.task4.MyAppConfig;
 import ru.inno.course.task4.LogTransformation;
 
 import java.io.File;
@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**Сервис убирает из лога для записи в БД строки без dateAccess
-*и записывет их в лог-файд NoDateAccessLog.txt.
+*и записывет их в лог-файл NoDateAccessLog.log.
 */
 @Service
 public class NoDateAccessLogWriter implements NoDateAccessLogWriteable {
-    @LogTransformation
-    public ArrayList<String []> writeNoDateAccessLog(ArrayList<String []> parsList) {
-        String logFile = AppConfig.pathLogFiles + "MyAppLog\\NoDateAccessLog.txt";
+    @LogTransformation(nameLogFile = "NoDataAccessLоger")
+    @Override
+    public ArrayList<String []> writeNoDateAccessLog(ArrayList<String []> parsList) throws IOException {
+        String logFile = MyAppConfig.pathLogFiles + "MyAppLog\\NoDateAccessLog.log";
         ArrayList<String []> logList = new ArrayList<>();
         String logStr;
 
@@ -29,10 +30,14 @@ public class NoDateAccessLogWriter implements NoDateAccessLogWriteable {
         }
 
         if (!logList.isEmpty()){
-            File file = new File(logFile);
+            File folder = new File(MyAppConfig.pathLogFiles + "MyAppLog\\");
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+
             logList.forEach(arr->{
                 try {
-                    FileWriter writer = new FileWriter(logFile);
+                    FileWriter writer = new FileWriter(logFile,true);
                     writer.write(getStringFromArray(arr) + "\n");
                     writer.close();
                 } catch (IOException e) {

@@ -1,5 +1,6 @@
 package ru.inno.course.task4;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.jupiter.api.Test;
@@ -19,11 +20,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @SpringBootTest
 
 public class TestServices {
-
     @Autowired
     UsersRepository usersRepository;
     @Autowired
@@ -38,6 +37,16 @@ public class TestServices {
     LogDBWriterable logDBWriter;
     @Autowired
     FileReaderable fileReader;
+    @Autowired
+    TestMethods testMethods;
+
+    @BeforeEach
+    public void initTest(){
+        File folder = new File(MyAppConfig.pathLogFiles + "MyAppLog\\");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+    }
 
     @Test
     @DisplayName("Тестирование сервиса преобразования application")
@@ -61,48 +70,49 @@ public class TestServices {
     @DisplayName("Тестирование сервиса проверки даты доступа")
     public void testDateAccess() throws IOException {
         ArrayList<String []> logList = new ArrayList<>();
-        ArrayList<String []> logListResult= new ArrayList<>();
+        ArrayList<String []> logListResult;
         ArrayList<String []> logListExpect= new ArrayList<>();
         String[] listStr1 = {"ivanovi", "иванов", "иван", "иванович", "online"};
         String[] listStr2 = {"admin", "админов", "админ", "админович", "2023-08-22", "22:00:00.000000000", "web"};
         logList.add(listStr1);
         logList.add(listStr2);
         logListExpect.add(listStr2);
+        //Удаляем тестовый файл
+        File delFile = new File(MyAppConfig.pathLogFiles + "MyAppLog\\NoDateAccessLog.log");
+        delFile.delete();
         logListResult = noDateAccessLogWriter.writeNoDateAccessLog(logList);
         //сервис возвращает коллекцию без строки с неполными данными
         Assertions.assertEquals(logListExpect, logListResult);
-        List<String> lines = Files.readAllLines(Paths.get(AppConfig.pathLogFiles + "MyAppLog\\NoDateAccessLog.txt"));
+        List<String> lines = Files.readAllLines(Paths.get(MyAppConfig.pathLogFiles + "MyAppLog\\NoDateAccessLog.Log"));
         for (String line : lines) {
-            //сервис записывает строку с неполными данными в лог файл
+            //проверка записи строки с неполными данными в лог файл
             Assertions.assertEquals("ivanovi иванов иван иванович online", line);
         }
-        //Удаляем тестовый файл
-        File delFile = new File(AppConfig.pathLogFiles + "MyAppLog\\NoDateAccessLog.txt");
-        Assertions.assertTrue(delFile.delete());
+
     }
 
     @Test
     @DisplayName("Тестирование сервиса чтения данных из файла")
     public void testFileReader() throws IOException {
         String testStr = "junit Jюнитов Jюнит Jюнитович 2023-08-22 00:00:00.000000000 testservice";
-        FileWriter writer = new FileWriter(AppConfig.pathLogFiles + "Test_log.txt");
+        FileWriter writer = new FileWriter(MyAppConfig.pathLogFiles + "Test_log.log");
         writer.write(testStr);
         writer.close();
-        Assertions.assertTrue(fileReader.fileScaner(AppConfig.pathLogFiles).contains(testStr));
+        Assertions.assertTrue(fileReader.fileScaner(MyAppConfig.pathLogFiles).contains(testStr));
         //Удаляем тестовый файл
-        File delFile = new File(AppConfig.pathLogFiles + "Test_log.txt");
-        Assertions.assertTrue(delFile.delete());
+        File delFile = new File(MyAppConfig.pathLogFiles + "Test_log.log");
+        delFile.delete();
     }
 
     @Test
     @DisplayName("Тестирование сервиса записи лога в БД")
     public void testDBWrite() throws IOException, SQLException {
-        FileWriter writer = new FileWriter(AppConfig.pathLogFiles + "Test_log.txt");
+        FileWriter writer = new FileWriter(MyAppConfig.pathLogFiles + "Test_log.log");
         writer.write("junit Jюнитов Jюнит Jюнитович 2023-08-22 00:00:00.000000000 testservice");
         writer.close();
 
         //ищем соответствующщие записи в БД
-        logDBWriter.write(AppConfig.connectParam);
+        logDBWriter.write();
         ArrayList<Users> listUsers = usersRepository.findByUserName("junit");
         Assertions.assertFalse(listUsers.isEmpty());
         ArrayList<Logins> listLogins = loginsRepository.findByAccessDateAndUserAndApplication(Timestamp.valueOf("2023-08-22 00:00:00.000000000"), new Users(listUsers.getFirst().getId(),listUsers.getFirst().getUserName(),listUsers.getFirst().getFio()) ,"other: testservice");
@@ -113,7 +123,19 @@ public class TestServices {
         usersRepository.deleteById(listUsers.getFirst().getId());
 
         //Удаляем тестовый файл
-        File delFile = new File(AppConfig.pathLogFiles + "Test_log.txt");
-        Assertions.assertTrue(delFile.delete());
+        File delFile = new File(MyAppConfig.pathLogFiles + "Test_log.log");
+        delFile.delete();
+    }
+
+    @Test
+    @DisplayName("Тестирование сервиса логирования выполнения методов, помеченных аннотацией")
+    public void testLogAnnotatedMethod() throws InterruptedException, IOException {
+        File delFile = new File(MyAppConfig.pathLogFiles + "MyAppLog\\TestLog.log");
+        delFile.delete();
+        int a = testMethods.testMethod(256);
+       List<String> lines = Files.readAllLines(Paths.get(MyAppConfig.pathLogFiles + "MyAppLog\\TestLog.log"));
+        for (String line : lines) {
+            Assertions.assertTrue(line.contains("запущен метод: testMethod класса: TestMethods с параметрами: [256]. Результат выполнения метода: 2560"));
+        }
     }
 }

@@ -4,6 +4,7 @@ package ru.inno.course.task4.DTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 //import javax.persistence.*;
@@ -20,13 +21,11 @@ public class Users {
     @Column(name = "id")
     private Long id;
 
+    @Getter
     @Column(name = "username", unique=true)
     private String userName;
 
     @Column(name = "fio")
     private  String fio;
 
-    public String getUserName() {
-        return userName;
-    }
 }

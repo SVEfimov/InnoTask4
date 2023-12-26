@@ -4,6 +4,5 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public interface LogDBWriterable {
-
-    void write(String connectParam) throws IOException, SQLException;
+    void write() throws IOException;
 }

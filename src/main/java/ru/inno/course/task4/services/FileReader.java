@@ -3,7 +3,6 @@ package ru.inno.course.task4.services;
 
 import org.springframework.stereotype.Service;
 import ru.inno.course.task4.LogTransformation;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.Scanner;
 public class FileReader implements FileReaderable {
     //Компонента чтения файлов по указанной директории
     @Override
-    @LogTransformation
+    @LogTransformation(nameLogFile = "FileReaderLog")
     public ArrayList<String> fileScaner(String path) throws FileNotFoundException {
         ArrayList<String> listAuthorization = new ArrayList<>();
         File folder = new File(path);
