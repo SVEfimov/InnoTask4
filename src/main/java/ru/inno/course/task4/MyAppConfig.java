@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 public class MyAppConfig {
     public static final String pathLogFiles = "D:\\WORK\\";
+    public static final String separatorString = " ";
 
 
 }

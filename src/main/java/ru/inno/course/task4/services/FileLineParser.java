@@ -53,7 +53,7 @@ public class FileLineParser implements FileLineParserable{
         */
         fileReader.fileScaner(MyAppConfig.pathLogFiles)
                 .forEach(str ->{
-                                parsList.add(str.split("\\ "));
+                                parsList.add(str.split("\\" + MyAppConfig.separatorString));
                                 }
                          );
         /**
