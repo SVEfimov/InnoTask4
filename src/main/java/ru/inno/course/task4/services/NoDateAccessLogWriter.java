@@ -47,7 +47,7 @@ public class NoDateAccessLogWriter implements NoDateAccessLogWriteable {
         }
         return  parsList;
     }
-    public String getStringFromArray(String [] arr){
+    private static String getStringFromArray(String [] arr){
         String ret ="";
         for (int i = 0; i < arr.length; i++) {
             if ( i> 0) {

@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Service
 public class ApplicationRefactor implements ApplicationRefactorable{
-    ArrayList<String> listApp = new ArrayList<>(Arrays.asList("web", "mobile"));
+    private final ArrayList<String> listApp = new ArrayList<>(Arrays.asList("web", "mobile"));
     @LogTransformation(nameLogFile = "AppRefactor")
     @Override
     public String [] refactor(String [] arr){

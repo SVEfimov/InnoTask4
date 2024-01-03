@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.inno.course.task4.DAO.LoginsRepository;
 import ru.inno.course.task4.DAO.UsersRepository;
-import ru.inno.course.task4.DTO.Logins;
-import ru.inno.course.task4.DTO.Users;
+import ru.inno.course.task4.DTO.Login;
+import ru.inno.course.task4.DTO.User;
 import ru.inno.course.task4.services.*;
 import java.io.File;
 import java.io.FileWriter;
@@ -113,9 +113,9 @@ public class TestServices {
 
         //ищем соответствующщие записи в БД
         logDBWriter.write();
-        ArrayList<Users> listUsers = usersRepository.findByUserName("junit");
+        ArrayList<User> listUsers = usersRepository.findByUserName("junit");
         Assertions.assertFalse(listUsers.isEmpty());
-        ArrayList<Logins> listLogins = loginsRepository.findByAccessDateAndUserAndApplication(Timestamp.valueOf("2023-08-22 00:00:00.000000000"), new Users(listUsers.getFirst().getId(),listUsers.getFirst().getUserName(),listUsers.getFirst().getFio()) ,"other: testservice");
+        ArrayList<Login> listLogins = loginsRepository.findByAccessDateAndUserAndApplication(Timestamp.valueOf("2023-08-22 00:00:00.000000000"), new User(listUsers.getFirst().getId(),listUsers.getFirst().getUserName(),listUsers.getFirst().getFio()) ,"other: testservice");
         Assertions.assertFalse(listLogins.isEmpty());
 
         //зачищаем тестовую запись

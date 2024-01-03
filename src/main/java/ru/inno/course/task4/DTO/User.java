@@ -1,33 +1,31 @@
 package ru.inno.course.task4.DTO;
 
-//import javax.persistence.*;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+//import javax.persistence.*;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "logins")
-public class Logins {
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "access_date")
-    private Timestamp accessDate;
+    @Getter
+    @Column(name = "username", unique=true)
+    private String userName;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users user;
-
-    @Column(name = "application")
-    private String application;
+    @Column(name = "fio")
+    private  String fio;
 
 }

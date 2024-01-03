@@ -11,34 +11,18 @@ import java.util.ArrayList;
 @Service
 public class FileLineParser implements FileLineParserable{
 
-    FileReaderable fileReader;
-    FIOUpperCaseable upperCaseService;
-    LogBodyCreatorable logBodyCreator;
-    NoDateAccessLogWriteable noDateAccessLogWriter;
-    ApplicationRefactorable applicationRefactor;
+    private FileReaderable fileReader;
+    private FIOUpperCaseable upperCaseService;
+    private LogBodyCreatorable logBodyCreator;
+    private NoDateAccessLogWriteable noDateAccessLogWriter;
+    private ApplicationRefactorable applicationRefactor;
 
     @Autowired
-    public void setFileReader(FileReaderable fileReader) {
+    public FileLineParser(FileReaderable fileReader, FIOUpperCaseable upperCaseService, LogBodyCreatorable logBodyCreator, NoDateAccessLogWriteable noDateAccessLogWriter, ApplicationRefactorable applicationRefactor) {
         this.fileReader = fileReader;
-    }
-
-    @Autowired
-    public void setUpperCaseService(FIOUpperCaseable upperCaseService) {
         this.upperCaseService = upperCaseService;
-    }
-
-    @Autowired
-    public void setLogBodyCreator(LogBodyCreatorable logBodyCreator) {
         this.logBodyCreator = logBodyCreator;
-    }
-
-    @Autowired
-    public void setNoDateAccessLogWriter(NoDateAccessLogWriteable noDateAccessLogWriter) {
         this.noDateAccessLogWriter = noDateAccessLogWriter;
-    }
-
-    @Autowired
-    public void setApplicationRefactor(ApplicationRefactorable applicationRefactor) {
         this.applicationRefactor = applicationRefactor;
     }
 
